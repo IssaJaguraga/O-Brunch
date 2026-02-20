@@ -27,3 +27,25 @@
       À propos
     </button>
 </nav>
+
+
+<style>
+  nav {
+    display: flex;
+    gap: 1rem;
+    background-color: #f5f5f5;
+    padding: 1rem;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .selected {
+    font-weight: bold;
+    color: #c59d5f;
+  }
+</style>

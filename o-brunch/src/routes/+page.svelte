@@ -10,6 +10,7 @@
 
 <Header bind:activeSection />
 
+<div class="container">
 {#if activeSection == 'home'}
   <HomeSection />
 {:else if activeSection == 'menu'}
@@ -19,3 +20,4 @@
 {:else}
   <AboutSection />
 {/if}
+</div>

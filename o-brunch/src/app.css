@@ -2,6 +2,11 @@ body {
 	margin: 0;
 	font-family: Arial, sans-serif;
 	background: linear-gradient(#FF708F,#FF9A62 25%);
-
-;
+	line-height: 1.5;
+}
+/* Container central pour toutes les sections */
+.container {
+  padding: 16px; /* mobile-first */
+  max-width: 1200px;
+  margin: 0 auto;
 }

@@ -1,4 +1,4 @@
-<h2>Menu</h2>
+
 
 <script>
   let menuItems = [

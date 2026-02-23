@@ -1,51 +1,84 @@
 <script>
-    export let activeSection; // on reçoit la variable depuis +page.svelte
+  import { createEventDispatcher } from 'svelte';
+  import Menu from './Menu.svelte';
+
+  export let activeSection;
+  const dispatch = createEventDispatcher();
+
+  let isMenuOpen = false;
+
+  function changeSection(section) {
+    dispatch('change', section);
+  }
+
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+  }
 </script>
 
-<nav>
-    <button 
-      class:selected={activeSection === 'home'} 
-      on:click={() => activeSection = 'home'}>
-      Accueil
-    </button>
+<header class="header">
+  <div class="top-bar">
+    <a href="/" class="logo">
+      <img src="/images/logo.png" alt="Logo O'Brunch">
+    </a>
 
     <button 
-      class:selected={activeSection === 'menu'} 
-      on:click={() => activeSection = 'menu'}>
-      Menu
+      class="burger" 
+      on:click={toggleMenu}
+      aria-label="Ouvrir le menu">
+      <img src="/images/menu_icon_burger.png" alt="Menu" />
     </button>
+  </div>
 
-    <button 
-      class:selected={activeSection === 'reservation'} 
-      on:click={() => activeSection = 'reservation'}>
-      Réservation
-    </button>
-
-    <button 
-      class:selected={activeSection === 'about'} 
-      on:click={() => activeSection = 'about'}>
-      À propos
-    </button>
-</nav>
-
+  <Menu
+    bind:isMenuOpen
+    {activeSection}
+    on:change={(e) => changeSection(e.detail)}
+  />
+</header>
 
 <style>
-  nav {
-    display: flex;
-    gap: 1rem;
-    background-color: #f5f5f5;
-    padding: 1rem;
+ .header {
+  background: rgba(255, 255, 255, 0.7); 
+  padding: 16px;
+  position: sticky; /* Le header reste en haut au scroll */
+  top: 0;
+  z-index: 1000;
+ 
   }
 
-  button {
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto; /* Aligné avec ton container */
+  }
+  .logo img 
+  {
+    height: 45px;
+    display: block;
+  }
+
+  .burger {
     background: none;
     border: none;
-    font-size: 1rem;
     cursor: pointer;
+    padding: 0;
   }
 
-  .selected {
-    font-weight: bold;
-    color: #c59d5f;
+ .burger img 
+ {
+    width: 28px;
+    height: auto;
+    border-radius: 3px;
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) 
+  {
+    .burger {
+      display: none;
+    }
   }
 </style>

@@ -8,7 +8,10 @@
   let activeSection = 'home';
 </script>
 
-<Header bind:activeSection />
+<Header
+  {activeSection}
+  on:change={(e) => activeSection = e.detail}
+/>
 
 <div class="container">
 {#if activeSection == 'home'}

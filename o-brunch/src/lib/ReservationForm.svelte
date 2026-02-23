@@ -1,5 +1,5 @@
  
-<h2>Réservation</h2>
+
 
 <script>
   let name = "";

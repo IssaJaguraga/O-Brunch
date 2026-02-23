@@ -1,4 +1,4 @@
-<h2>A propos</h2>
+
 
 <section class="about">
   <h2>À propos de O'Brunch</h2>

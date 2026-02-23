@@ -1,12 +1,25 @@
 body {
-	margin: 0;
-	font-family: Arial, sans-serif;
-	background: linear-gradient(#FF708F,#FF9A62 25%);
-	line-height: 1.5;
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(135deg, #E67E5F 0%, #F3C583 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #2D2424;
 }
-/* Container central pour toutes les sections */
+
 .container {
-  padding: 16px; /* mobile-first */
-  max-width: 1200px;
-  margin: 0 auto;
+    max-width: 1200px;
+    margin: 20px auto; 
+    width: calc(100% - 32px); 
+    background: rgba(255, 255, 255, 0.4); 
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .container {
+        margin: 40px auto;
+    }
 }

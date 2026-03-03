@@ -4,7 +4,6 @@
 
   export let activeSection;
   const dispatch = createEventDispatcher();
-
   let isMenuOpen = false;
 
   function changeSection(section) {
@@ -14,71 +13,84 @@
   function toggleMenu() {
     isMenuOpen = !isMenuOpen;
   }
+
+  function goHome() {
+    dispatch("change", "home");
+  }
 </script>
 
-<header class="header">
-  <div class="top-bar">
-    <a href="/" class="logo">
-      <img src="/images/logo.png" alt="Logo O'Brunch">
-    </a>
+<header class="header-container">
+  <div class="header-navigation">
 
-    <button 
-      class="burger" 
-      on:click={toggleMenu}
-      aria-label="Ouvrir le menu">
+    <button class="header-logo" on:click={goHome}>
+      <img src="/images/logo.png" alt="Logo O'Brunch" />
+    </button>
+
+    <button class="burger-button" on:click={toggleMenu}>
       <img src="/images/menu_icon_burger.png" alt="Menu" />
     </button>
+
   </div>
 
-  <Menu
-    bind:isMenuOpen
-    {activeSection}
-    on:change={(e) => changeSection(e.detail)}
-  />
+  <Menu 
+    bind:isMenuOpen 
+    {activeSection} 
+    on:change={(e) => changeSection(e.detail)} 
+    />
 </header>
 
 <style>
- .header {
-  background: rgba(255, 255, 255, 0.7); 
-  padding: 16px;
-  position: sticky; /* Le header reste en haut au scroll */
-  top: 0;
-  z-index: 1000;
- 
+  .header-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0 16px; 
+    margin-bottom: 50px;
   }
 
-  .top-bar {
+  .header-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
-    margin: 0 auto; /* Aligné avec ton container */
-  }
-  .logo img 
-  {
+    margin: 0 auto;
     height: 45px;
-    display: block;
   }
 
-  .burger {
+  .header-logo {
+    background-color: #fbe9e4;
+    border-radius: 30px;
+    padding: 10px 30px ;
+    position: relative;
+    top: 18px; 
+    border: 2px solid #F2A38A;
+    cursor: pointer;
+  }
+
+  .header-logo img {
+    height: 35px;
+    display: block; 
+  }
+
+  .burger-button {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
   }
 
- .burger img 
- {
-    width: 28px;
-    height: auto;
-    border-radius: 3px;
+  .burger-button img {
+    width: 47px;
+    margin-top: 40px;
+    border-radius: 7px;
   }
 
-  /* Desktop */
-  @media (min-width: 1024px) 
-  {
-    .burger {
-      display: none;
+  @media (min-width: 1024px) {
+    .burger-button { 
+      display: none; 
+    }
+    .header-logo {
+      margin: 40px 0 2px;
     }
   }
 </style>

@@ -6,21 +6,25 @@
   import AboutSection from '$lib/AboutSection.svelte';
 
   let activeSection = 'home';
+
+  function changeSection(event) {
+    activeSection = event.detail;
+  }
 </script>
 
 <Header
   {activeSection}
-  on:change={(e) => activeSection = e.detail}
+  on:change={changeSection}
 />
 
-<div class="container">
-{#if activeSection == 'home'}
-  <HomeSection />
-{:else if activeSection == 'menu'}
-  <MenuSection />
-{:else if activeSection == 'reservation'}
-  <ReservationForm />
-{:else}
-  <AboutSection />
-{/if}
-</div>
+<main class="container">
+  {#if activeSection === 'home'}
+    <HomeSection on:change={changeSection} />
+  {:else if activeSection === 'menu'}
+    <MenuSection />
+  {:else if activeSection === 'reservation'}
+    <ReservationForm />
+  {:else}
+    <AboutSection />
+  {/if}
+</main>

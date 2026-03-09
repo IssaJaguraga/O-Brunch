@@ -7,8 +7,26 @@
 
   let activeSection = 'home';
 
+  // Panier pour stocker les brunchs choisis
+  let cart = [];
+
   function changeSection(event) {
     activeSection = event.detail;
+  }
+
+  // Ajouter un brunch au panier
+  function addToCart(item) {
+    cart = [...cart, item];
+    alert(`${item.name} ajouté au panier !`);
+  }
+
+  // Soumettre la réservation avec le panier
+  function submitReservation(reservationData) {
+    alert(
+      `Merci ${reservationData.name}, votre réservation pour ${reservationData.guests} personne(s) le ${reservationData.date} est confirmée !\n\n` +
+      `Vous avez réservé :\n` + cart.map(i => `- ${i.name} (${i.price}€)`).join("\n")
+    );
+    cart = []; // réinitialiser le panier après réservation
   }
 </script>
 
@@ -21,9 +39,9 @@
   {#if activeSection === 'home'}
     <HomeSection on:change={changeSection} />
   {:else if activeSection === 'menu'}
-    <MenuSection />
+    <MenuSection on:addToCart={addToCart} />
   {:else if activeSection === 'reservation'}
-    <ReservationForm />
+    <ReservationForm {cart} on:submitReservation={submitReservation} />
   {:else}
     <AboutSection />
   {/if}

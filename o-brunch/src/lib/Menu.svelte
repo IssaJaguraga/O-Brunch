@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { slide } from 'svelte/transition';
+
   export let isMenuOpen;
   export let activeSection;
 
@@ -15,34 +16,33 @@
 
   function changeSection(sectionId) {
     dispatch('change', sectionId);
-    dispatch('closeMenu'); // informe le parent de fermer le menu
+    dispatch('closeMenu');
   }
 </script>
 
-<nav class:open={isMenuOpen}>
-  {#each sections as section}
-    <button
-      class:selected={activeSection === section.id}
-      on:click={() => changeSection(section.id)}
-      aria-current={activeSection === section.id ? 'page' : undefined}>
-      {section.label}
-    </button>
-  {/each}
-</nav>
+{#if isMenuOpen}
+  <nav transition:slide>
+    {#each sections as section}
+      <button
+        class:selected={activeSection === section.id}
+        on:click={() => changeSection(section.id)}
+        aria-current={activeSection === section.id ? 'page' : undefined}
+      >
+        {section.label}
+      </button>
+    {/each}
+  </nav>
+{/if}
 
 <style>
   nav {
-    display: none; 
+    display: flex;
     flex-direction: column;
-    align-items: center; 
-    justify-content: center; 
+    align-items: center;
+    justify-content: center;
     gap: 15px;
     width: 100%;
-    padding-bottom: 35px; 
-  }
-
-  nav.open {
-    display: flex;
+    padding-bottom: 35px;
   }
 
   button {
@@ -65,14 +65,13 @@
 
   @media (max-width: 600px) {
     nav {
-      margin-top: 55px; 
+      margin-top: 55px;
       width: 100%;
     }
   }
 
   @media (min-width: 1024px) {
     nav {
-      display: flex;
       flex-direction: row;
       justify-content: center;
       margin-top: 15px;

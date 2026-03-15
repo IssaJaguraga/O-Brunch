@@ -1,32 +1,33 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { slide } from 'svelte/transition';
   export let isMenuOpen;
   export let activeSection;
 
   const dispatch = createEventDispatcher();
 
-  function changeSection(section) {
-    dispatch('change', section);
-    isMenuOpen = false;
+  const sections = [
+    { id: 'home', label: 'Accueil' },
+    { id: 'menu', label: 'Menu' },
+    { id: 'reservation', label: 'Réservation' },
+    { id: 'about', label: 'À propos' }
+  ];
+
+  function changeSection(sectionId) {
+    dispatch('change', sectionId);
+    dispatch('closeMenu'); // informe le parent de fermer le menu
   }
 </script>
 
 <nav class:open={isMenuOpen}>
-  <button class:selected={activeSection === 'home'} 
-  on:click={() => changeSection('home')}>Accueil
-  </button>
-
-  <button class:selected={activeSection === 'menu'} 
-  on:click={() => changeSection('menu')}>Menu
-  </button>
-
-  <button class:selected={activeSection === 'reservation'} 
-  on:click={() => changeSection('reservation')}>Réservation
-  </button>
-
-  <button class:selected={activeSection === 'about'} 
-  on:click={() => changeSection('about')}>À propos
-  </button>
+  {#each sections as section}
+    <button
+      class:selected={activeSection === section.id}
+      on:click={() => changeSection(section.id)}
+      aria-current={activeSection === section.id ? 'page' : undefined}>
+      {section.label}
+    </button>
+  {/each}
 </nav>
 
 <style>
@@ -41,7 +42,7 @@
   }
 
   nav.open {
-    display: flex; /* S'affiche quand on clique */
+    display: flex;
   }
 
   button {
@@ -50,11 +51,11 @@
     font-size: 20px;
     color: #2D2424;
     cursor: pointer;
-    width: fit-content; /* Le bouton prend juste la place de son texte */
+    width: fit-content;
   }
 
   button:hover {
-    color: #E67E5F; /* Le bouton change de couleur au survol */
+    color: #E67E5F;
   }
 
   .selected {
@@ -64,7 +65,6 @@
 
   @media (max-width: 600px) {
     nav {
-      /* On augmente la marge pour laisser passer le logo qui dépasse */
       margin-top: 55px; 
       width: 100%;
     }

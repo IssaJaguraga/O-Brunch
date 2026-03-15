@@ -1,8 +1,10 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
+  
+  export let cart = []; 
 
-let menuItems = [
+  let menuItems = [
     {
       id: 1,
       name: "L'Estival",
@@ -10,7 +12,7 @@ let menuItems = [
       description: "Benedict signature, brioche perdue et granola pistache.",
       badgeType: "Populaire",
       badgeColor: "#E67E5F",
-      image: "/images/brunch-estival.jpg.jpg"
+      image: "/images/brunch-estival.jpg"
     },
     {
       id: 2,
@@ -26,7 +28,7 @@ let menuItems = [
       description: "Pancakes myrtilles, sirop d'érable, saumon et jus frais.",
       badgeType: "Nouveau",
       badgeColor: "#3498DB",
-      image: "/images/brunch-toscane.jpg.jpg"
+      image: "/images/brunch-toscane.jpg"
     },
     {
       id: 4,
@@ -74,8 +76,20 @@ let menuItems = [
     }
   ];
 
+  $: isInCart = (id) => cart.some(item => item.id === id);
+
   function handleAdd(item) {
-    dispatch('addToCart', item); // envoie le brunch au parent
+    if (!isInCart(item.id)) {
+      dispatch('addToCart', item);
+    }
+  }
+
+  function goToReservation() {
+    dispatch('change', 'reservation');
+  }
+
+  function handleRemove(id) {
+    dispatch('removeItem', id);
   }
 </script>
 
@@ -83,10 +97,21 @@ let menuItems = [
   <h2 class="MenuTitle">Notre Menu</h2>
   <p class="MenuSubtitle">Tous nos plats sont faits maison avec des produits frais.</p>
 
+  {#if cart.length > 0}
+    <div class="cart-floating-banner">
+      <div class="banner-info">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count">{cart.length} plat(s) sélectionné(s)</span>
+      </div>
+      <button class="btn-go-cart" on:click={goToReservation}>
+        Voir mon panier →
+      </button>
+    </div>
+  {/if}
+
   <div class="menu-grid">
     {#each menuItems as item}
       <div class="card">
-
         {#if item.badgeType}
           <span class="badge" style="background-color: {item.badgeColor}">
             {item.badgeType}
@@ -103,21 +128,44 @@ let menuItems = [
 
           <div class="bottom">
             <span class="price">{item.price}€</span>
-            <button class="MenuButton" on:click={() => handleAdd(item)}>Commander</button>
-          </div>
-        </div>
 
+            <div class="button-group">
+              {#if isInCart(item.id)}
+                <button 
+                  class="btn-remove-mini" 
+                  on:click={() => handleRemove(item.id)}
+                  title="Retirer du panier"
+                >
+                  ✕
+                </button>
+                <button class="MenuButton in-cart">
+                  Ajouté ! ✓
+                </button>
+              {:else}
+                <button 
+                  class="MenuButton" 
+                  on:click={() => handleAdd(item)}
+                >
+                  Commander
+                </button>
+              {/if}
+            </div>
+          </div>
+
+          {#if isInCart(item.id)}
+            <p class="go-to-res">Prêt à être réservé en bas ! ↓</p>
+          {/if}
+        </div>
       </div>
     {/each}
   </div>
 </section>
 
 <style>
-
-/* ----- SECTION MENU ----- */
 .menu-container {
-  padding: 40px 20px;
+  padding: 40px 20px 120px 20px;
   text-align: center;
+  position: relative;
 }
 
 .MenuTitle {
@@ -125,10 +173,59 @@ let menuItems = [
   color: #2D2424;
   margin-bottom: 15px;
 }
+
 .MenuSubtitle { 
   color: #777;
   margin-bottom: 40px; 
   font-style: italic; 
+}
+
+/* BANNIÈRE FLOTTANTE */
+.cart-floating-banner {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: #2D2424;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.banner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cart-count {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn-go-cart {
+  background-color: #E67E5F;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@keyframes slideIn {
+  from { transform: translate(-50%, 100px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }
 
 .menu-grid {
@@ -136,7 +233,7 @@ let menuItems = [
   margin: auto;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 15px;
+  gap: 20px;
 }
 
 @media (min-width: 768px) {
@@ -156,11 +253,11 @@ let menuItems = [
   flex-direction: column;
   transition: transform 0.3s ease;
 }
+
 .card:hover {
-  transform: translateY(-5px); /* La carte se soulève un peu */
+  transform: translateY(-5px);
 }
 
-/* Badge */
 .badge {
   position: absolute;
   top: 10px;
@@ -169,24 +266,21 @@ let menuItems = [
   padding: 4px 10px;
   font-size: 12px;
   border-radius: 12px;
-
+  z-index: 2;
 }
 
-/* Image container */
 .card-image-container {
   width: 100%;
   overflow: hidden;
-  aspect-ratio: 1 / 1; /* force un carré */
+  aspect-ratio: 1 / 1;
 }
 
 .card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center; 
 }
 
-/* Content */
 .card-content {
   padding: 15px;
   display: flex;
@@ -203,6 +297,7 @@ h3 {
 .description {
   color: #4A3F3F;
   font-size: 14px;
+  margin-bottom: 15px;
 }
 
 .bottom {
@@ -218,7 +313,7 @@ h3 {
   color: #E67E5F;
 }
 
-button {
+button.MenuButton {
   background-color: #2D2424;
   color: white;
   border: none;
@@ -229,13 +324,52 @@ button {
   transition: all 0.2s ease;
 }
 
-button:hover {
-  background-color: #E67E5F; /* Change de couleur au survol */
+button.MenuButton:hover:not(.in-cart) {
+  background-color: #E67E5F;
   transform: scale(1.05);
-  opacity: 0.9;
 }
 
-button:active {
-  transform: scale(0.95); /* Effet de pression quand on clique */
+button.in-cart {
+  background-color: #27AE60;
+  cursor: default;
+}
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-remove-mini {
+  background-color: #ffeded;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-remove-mini:hover {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.go-to-res {
+  font-size: 11px;
+  color: #27AE60;
+  margin-top: 8px;
+  font-weight: bold;
+  text-align: right;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

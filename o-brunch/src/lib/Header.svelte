@@ -8,6 +8,7 @@
 
   function changeSection(section) {
     dispatch('change', section);
+    isMenuOpen = false; // ferme le menu quand on clique sur une section
   }
 
   function toggleMenu() {
@@ -20,8 +21,8 @@
 </script>
 
 <header class="header-container">
-  <div class="header-navigation">
 
+  <div class="header-navigation">
     <button class="header-logo" on:click={goHome}>
       <img src="/images/logo.png" alt="Logo O'Brunch" />
     </button>
@@ -29,14 +30,10 @@
     <button class="burger-button" on:click={toggleMenu}>
       <img src="/images/menu_icon_burger.png" alt="Menu" />
     </button>
-
   </div>
 
-  <Menu 
-    bind:isMenuOpen 
-    {activeSection} 
-    on:change={(e) => changeSection(e.detail)} 
-    />
+  <Menu bind:isMenuOpen {activeSection} on:change={(e) => changeSection(e.detail)} />
+
 </header>
 
 <style>

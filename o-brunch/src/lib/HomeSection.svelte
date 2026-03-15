@@ -3,13 +3,34 @@
   
   const dispatch = createEventDispatcher();
 
+  export let cart = [];
+
   function goToMenu() {
-    dispatch("change", "menu");
+    dispatch('change', 'menu');
   }
 
   function goToReservation() {
-    dispatch("change", "reservation");
+    dispatch('change', cart.length > 0 ? 'reservation' : 'menu');
   }
+
+  const features = [
+    {
+      title: "Fraîcheur",
+      text: "Produits de saison et pain artisanal."
+    },
+    {
+      title: "Fait Maison",
+      text: "Recettes préparées avec amour chaque matin."
+    },
+    {
+      title: "Ambiance cosy",
+      text: "Un lieu chaleureux pour partager un moment unique."
+    },
+    {
+      title: "Ouvert 7j/7",
+      text: "De 8h à 16h non-stop."
+    }
+  ];
 </script>
 
 <section class="home">
@@ -27,36 +48,49 @@
     </p>
 
     <div class="cta">
-      <button on:click={goToMenu}>Voir le menu</button>
-      <button class="secondary" on:click={goToReservation}>Réserver</button>
-    </div>
-
-    <div class="features">
-      <div class="feature-item">
-        <h3>Fraîcheur</h3>
-        <p>Produits de saison et pain artisanal.</p>
-      </div>
-      <div class="feature-item">
-        <h3>Fait Maison</h3>
-        <p>Recettes préparées avec amour chaque matin.</p>
-      </div>
-
-      <div class="feature-item">
-        <h3>Ambiance cosy</h3>
-        <p>Un lieu chaleureux pour partager un moment unique.</p>
-      </div>
-
-      <div class="feature-item">
-        <h3>Ouvert 7j/7</h3>
-        <p>De 8h à 16h non-stop.</p>
-      </div>
+      <button on:click={goToMenu}>
+        Voir le menu
+      </button>
+      
+      <button class="secondary" on:click={goToReservation}>
+        {#if cart.length > 0}
+          Finaliser ma commande ({cart.length})
+        {:else}
+          Réserver une table
+        {/if}
+      </button>
     </div>
   </div>
 
-  <img src="/images/img_home.jpg" alt="Table garnie avec pancakes, fruits et café chez O'Brunch" />
+  <div class="features">
+    {#each features as feature}
+      <div class="feature-item">
+        <h3>{feature.title}</h3>
+        <p>{feature.text}</p>
+      </div>
+    {/each}
+  </div>
+
+  <div class="home-image">
+    <img src="/images/img_home.jpg" alt="Table garnie avec pancakes, fruits et café chez O'Brunch" />
+  </div>
 </section>
 
 <style>
+  .home-image {
+    max-width: 750px; /* limite la largeur sur grands écrans */
+    margin: 30px auto 0; /* centre et espace du haut */
+    /* garde un joli arrondi */
+    overflow: hidden; /* arrondi propre */
+  }
+
+  .home-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover; /* garde le ratio et découpe si besoin */
+  }
+  
   .home {
     text-align: center;
   }
@@ -118,27 +152,49 @@
   }
 
   .features {
-    display: flex;
-    flex-direction: column;
-    margin: 30px 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 40px 20px;
+    padding: 20px;
+    background: #fdfaf8;
+    border-radius: 15px;
+  }
+
+  .feature-item {
+    border-bottom: 1px solid #eee; /* Séparateur sur mobile */
+  }
+
+  /* On enlève la bordure sur le dernier item */
+  .feature-item:last-child {
+    border-bottom: none;
   }
 
   .feature-item h3 {
     font-size: 18px;
-    gap: 20px;
-    color: #2D2424;
+    color: #E67E5F; /* Utilise ta couleur dominante pour les titres */
+    margin-bottom: 5px;
   }
 
-  img {
-    width: 100%;
-    border-radius: 0 0 20px 20px;
-    display: block;
+  .feature-item p {
+    font-size: 14px;
+    margin-bottom: 0;
   }
 
+  /* VERSION DESKTOP (Tablette et ordi) */
   @media (min-width: 768px) {
     .features {
-      flex-direction: row;
-      justify-content: center;
+      grid-template-columns: repeat(4, 1fr); /* 4 colonnes alignées */
+      gap: 10px;
+    }
+
+    .feature-item {
+      border-bottom: none;
+      border-right: 1px solid #eee; /* Séparateur vertical entre les items */
+    }
+
+    .feature-item:last-child {
+      border-right: none;
     }
   }
 </style>
